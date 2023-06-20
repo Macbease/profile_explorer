@@ -1,10 +1,12 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, Dimensions, FlatList, Pressable, Animated, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Image, Dimensions, FlatList, Pressable, Animated, ScrollView, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { profile, communityData } from "../constants/data";
 import CommunityPin from "../components/communityPin";
 import { Entypo, FontAwesome } from '@expo/vector-icons';
 import * as Animatable from "react-native-animatable";
+import Card3 from "../components/card3";
+import Expand from "../components/expand";
 
 const SPACING = 12;
 const { width, height } = Dimensions.get("screen");
@@ -17,16 +19,21 @@ const animation = {
 };
 
 const animation1 = {
-    0: { opacity: 0, translateX: -100 },
+    0: { opacity: 0, translateX: -200 },
     1: { opacity: 1, translateX: 0 }
 };
 
 
 export default function Profile({ route, navigation }) {
     const scrollX = React.useRef(new Animated.Value(0)).current;
+    const [modal, setModal] = React.useState(false);
+    const [modalData, setModalData] = React.useState(null);
     const { img, name } = route.params;
     return (
         <SafeAreaView>
+            <Modal visible={modal} transparent={true} animationType="slide" style={{ position: "absolute" }}>
+                <Expand modalData={modalData} setModal={setModal} />
+            </Modal>
             <Animatable.View style={styles.profile} animation={animation1} useNativeDriver delay={600}>
                 <View style={styles.img}>
                     <Image
@@ -62,7 +69,7 @@ export default function Profile({ route, navigation }) {
                     </View>
                     <Animated.FlatList
                         data={profile.cards}
-                        keyExtractor={({ index, _ }) => index}
+                        keyExtractor={(_, index) => index}
                         horizontal
                         snapToInterval={Carousel_W + 2 * SPACING}
                         onScroll={Animated.event(
@@ -82,16 +89,7 @@ export default function Profile({ route, navigation }) {
                                 extrapolate: "clamp"
                             });
                             return (
-                                <View style={[styles.card, { backgroundColor: item.color }]} onPress={() => navigation.navigate("profile", { img: item.img, name: item.name })}>
-                                    <Animated.Text style={[styles.buttonText, { opacity, transform: [{ translateX: translateXHeading }] }]}>{item.text}</Animated.Text>
-                                    <View style={styles.tag}>
-                                        {item.tag.map((item, index) => {
-                                            return (
-                                                <Animated.Text key={index} style={[styles.buttonText, { opacity, transform: [{ translateX: translateXHeading }] }]} ># {item}</Animated.Text>
-                                            )
-                                        })}
-                                    </View>
-                                </View>
+                                <Card3 item={item} opacity={opacity} translateXHeading={translateXHeading} navigation={navigation} setModalData={setModalData} setModal={setModal} index={index} />
                             )
                         }}
                     />
@@ -133,6 +131,12 @@ export default function Profile({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+    buttonText: {
+        fontWeight: "bold",
+        color: "white",
+        fontSize: 16,
+        textAlign: "center"
+    },
     prompt: {
         height: 30,
         borderRadius: 2 * SPACING,
@@ -160,39 +164,6 @@ const styles = StyleSheet.create({
     container: {
         // borderWidth: 0.5,
         marginTop: 18
-    },
-    tag: {
-        // borderWidth: 0.5,
-        height: 30,
-        width: Carousel_W,
-        marginTop: SPACING,
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-evenly"
-    },
-    buttonText: {
-        fontWeight: "bold",
-        color: "white",
-        fontSize: 16,
-        textAlign: "center"
-    },
-    card: {
-        // borderWidth: 0.5,
-        height: Carousel_H,
-        width: Carousel_W,
-        borderRadius: SPACING,
-        marginHorizontal: SPACING,
-        marginTop: SPACING,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "white",
-        shadowColor: "black",
-        shadowRadius: 1,
-        shadowOffset: { width: 0.5, height: 1 },
-        shadowOpacity: 0.9,
-        paddingHorizontal: 8,
     },
     titleText: {
         fontWeight: "bold",

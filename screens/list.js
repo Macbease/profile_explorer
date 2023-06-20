@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Dimensions, TextInput, Pressable, ScrollView, F
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome, Foundation, FontAwesome5 } from '@expo/vector-icons';
 import { data, data1, person, data2 } from "../constants/data";
+import Card from "../components/card";
 
 const { width, height } = Dimensions.get("screen");
 const SPACING = 12;
@@ -12,27 +13,32 @@ const Carousel_W = 280;
 export default function List({ navigation }) {
     const scrollX = React.useRef(new Animated.Value(0)).current;
     const scrollX1 = React.useRef(new Animated.Value(0)).current;
+    const [prompt, setPrompt] = React.useState(null);
     return (
         <SafeAreaView>
             <View style={styles.searchBox}>
                 <TextInput
                     placeholder="Search prompt..."
                     style={styles.textInput}
+                    onChangeText={(txt) => setPrompt(txt)}
                 />
-                <Pressable style={({ pressed }) => [styles.searchButton, pressed && { opacity: 0.7 }]}>
+                <Pressable style={({ pressed }) => [styles.searchButton, pressed && { opacity: 0.7 }]} onPress={() => {
+                    if (!prompt) return
+                    navigation.navigate("search", { prompt })
+                }}>
                     <FontAwesome name="search" size={22} color="#444" />
                 </Pressable>
             </View>
             <ScrollView style={{ marginTop: SPACING, marginBottom: 4 * SPACING }}>
                 <View style={styles.promptBox}>
-                    <Pressable style={({ pressed }) => [styles.prompt, { width: "25%" }, pressed && { opacity: 0.7 }]}>
+                    <Pressable style={({ pressed }) => [styles.prompt, { width: "25%" }, pressed && { opacity: 0.7 }]} onPress={() => { navigation.navigate("myCard") }}>
                         <Text style={styles.buttonText}>Your cards</Text>
                     </Pressable>
-                    <Pressable style={({ pressed }) => [styles.prompt, { width: "38%" }, pressed && { opacity: 0.7 }]}>
-                        <Text style={styles.buttonText}>Generate ideas</Text>
+                    <Pressable style={({ pressed }) => [styles.prompt, { width: "40%" }, pressed && { opacity: 0.7 }]} onPress={() => { navigation.navigate("prompts") }}>
+                        <Text style={styles.buttonText}>Generate prompts</Text>
                         <Foundation name="lightbulb" size={20} color="white" style={{ marginLeft: 6, marginBottom: 4 }} />
                     </Pressable>
-                    <Pressable style={({ pressed }) => [styles.prompt, { width: "30%" }, pressed && { opacity: 0.7 }]}>
+                    <Pressable style={({ pressed }) => [styles.prompt, { width: "30%" }, pressed && { opacity: 0.7 }]} onPress={() => { navigation.navigate("explore") }}>
                         <Text style={styles.buttonText}>Explore</Text>
                         <FontAwesome5 name="wpexplorer" size={20} color="white" style={{ marginLeft: 6 }} />
                     </Pressable>
@@ -42,7 +48,7 @@ export default function List({ navigation }) {
                 </View>
                 <Animated.FlatList
                     data={data}
-                    keyExtractor={({ index, _ }) => index}
+                    keyExtractor={(_, index) => index}
                     horizontal
                     snapToInterval={Carousel_W + 2 * SPACING}
                     onScroll={Animated.event(
@@ -50,7 +56,7 @@ export default function List({ navigation }) {
                         { useNativeDriver: true }
                     )}
                     showsHorizontalScrollIndicator={false}
-                    renderItem={({ item, index }) => {
+                    renderItem={({ index, item }) => {
                         const inputRange = [(index - 1) * (Carousel_W + 20), index * (Carousel_W + 20), (index + 1) * (Carousel_W + 20)];
                         const translateXHeading = scrollX.interpolate({
                             inputRange,
@@ -62,26 +68,9 @@ export default function List({ navigation }) {
                             extrapolate: "clamp"
                         });
                         return (
-                            <Pressable style={({ pressed }) => [styles.card, { backgroundColor: item.color }, pressed && { opacity: 0.7 }]} onPress={() => navigation.navigate("profile", { img: item.img, name: item.name })}>
-                                <Animated.View style={[styles.top, { opacity, transform: [{ translateX: translateXHeading }] }]}>
-                                    <View style={styles.imageBox}>
-                                        <Image source={{ uri: item.img }} style={styles.img} />
-                                    </View>
-                                    <View style={styles.interests}>
-                                        {item.interest.map((item, index) => {
-                                            return (
-                                                <Text style={[styles.buttonText, { fontSize: 12, textAlign: "center", marginTop: 8 }]} key={index}># {item}</Text>
-                                            )
-                                        })}
-                                    </View>
-                                </Animated.View>
-                                <View style={styles.bottom}>
-                                    <Pressable>
-                                        <Text style={styles.buttonText}>@ {item.name}</Text>
-                                    </Pressable>
-                                </View>
-                            </Pressable>
+                            <Card translateXHeading={translateXHeading} navigation={navigation} item={item} opacity={opacity} />
                         )
+
                     }}
                 />
                 <View style={styles.title}>
@@ -97,7 +86,7 @@ export default function List({ navigation }) {
                     </View>
                     <View style={styles.personTag}>
                         <Text style={styles.tagText}>" {person.tag} "</Text>
-                        <Pressable style={({ pressed }) => [styles.prompt, { height: 30, width: 120, marginTop: SPACING }, pressed && { opacity: 0.7 }]}>
+                        <Pressable style={({ pressed }) => [styles.prompt, { height: 30, width: 120, marginTop: SPACING }, pressed && { opacity: 0.7 }]} onPress={() => { navigation.navigate("profile", { img: person.img, name: person.name }) }}>
                             <Text style={styles.buttonText}>Find more</Text>
                         </Pressable>
                     </View>
@@ -110,9 +99,9 @@ export default function List({ navigation }) {
                     keyExtractor={(_, index) => index}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    renderItem={({ item, index }) => {
+                    renderItem={({ index, item }) => {
                         return (
-                            <Pressable style={({ pressed }) => [styles.circularImg, pressed && { opacity: 0.7 }]}>
+                            <Pressable style={({ pressed }) => [styles.circularImg, pressed && { opacity: 0.7 }]} onPress={() => { navigation.navigate("profile", { img: item.img, name: item.name }) }}>
                                 <Image
                                     source={{ uri: item.img }}
                                     style={{ width: "100%", height: "100%", borderRadius: 50, resizeMode: "cover" }}
@@ -126,7 +115,7 @@ export default function List({ navigation }) {
                 </View>
                 <Animated.FlatList
                     data={data1}
-                    keyExtractor={({ index, _ }) => index}
+                    keyExtractor={(_, index) => index}
                     horizontal
                     snapToInterval={Carousel_W + 2 * SPACING}
                     onScroll={Animated.event(
@@ -134,7 +123,7 @@ export default function List({ navigation }) {
                         { useNativeDriver: true }
                     )}
                     showsHorizontalScrollIndicator={false}
-                    renderItem={({ item, index }) => {
+                    renderItem={({ index, item }) => {
                         const inputRange = [(index - 1) * (Carousel_W + 20), index * (Carousel_W + 20), (index + 1) * (Carousel_W + 20)];
                         const translateXHeading = scrollX1.interpolate({
                             inputRange,
@@ -146,25 +135,7 @@ export default function List({ navigation }) {
                             extrapolate: "clamp"
                         });
                         return (
-                            <View style={[styles.card, { backgroundColor: item.color }]}>
-                                <Animated.View style={[styles.top, { opacity, transform: [{ translateX: translateXHeading }] }]}>
-                                    <View style={styles.imageBox}>
-                                        <Image source={{ uri: item.img }} style={styles.img} />
-                                    </View>
-                                    <View style={styles.interests}>
-                                        {item.interest.map((item, index) => {
-                                            return (
-                                                <Text style={[styles.buttonText, { fontSize: 12, textAlign: "center", marginTop: 8 }]} key={index}># {item}</Text>
-                                            )
-                                        })}
-                                    </View>
-                                </Animated.View>
-                                <View style={styles.bottom}>
-                                    <Pressable>
-                                        <Text style={styles.buttonText}>@ {item.name}</Text>
-                                    </Pressable>
-                                </View>
-                            </View>
+                            <Card translateXHeading={translateXHeading} navigation={navigation} item={item} opacity={opacity} />
                         )
                     }}
                 />
@@ -230,63 +201,11 @@ const styles = StyleSheet.create({
         // borderWidth: 0.5,
         marginTop: SPACING
     },
-    top: {
-        // borderWidth: 0.5,
-        width: "100%",
-        height: "80%",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    bottom: {
-        // borderWidth: 0.5,
-        width: "100%",
-        height: "20%",
-        alignItems: "center"
-    },
-    img: {
-        width: 80,
-        height: 80,
-        borderRadius: 50,
-        resizeMode: "cover"
-    },
-    interests: {
-        // borderWidth: 0.5,
-        height: "100%",
-        width: "62%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    imageBox: {
-        // borderWidth: 0.5,
-        height: "100%",
-        width: "38%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    card: {
-        // borderWidth: 0.5,
-        height: Carousel_H,
-        width: 280,
-        borderRadius: SPACING,
-        marginHorizontal: SPACING,
-        marginTop: SPACING,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "white",
-        shadowColor: "black",
-        shadowRadius: 1,
-        shadowOffset: { width: 0.5, height: 1 },
-        shadowOpacity: 0.9
-    },
+
     buttonText: {
         fontWeight: "bold",
         color: "white",
-        fontSize: 14
+        fontSize: 12
     },
     prompt: {
         height: "100%",
