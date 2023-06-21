@@ -345,7 +345,7 @@ export const search = [
     {
         img: "https://images.pexels.com/photos/2531552/pexels-photo-2531552.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
         name: "Samuel Cooper",
-        tag: " have a passion for filmmaking, so I spend time writing scripts, shooting videos, and editing them. It's a hobby that combines storytelling, creativity, and technology.",
+        tag: " I have a passion for filmmaking, so I spend time writing scripts, shooting videos, and editing them. It's a hobby that combines storytelling, creativity, and technology.",
         color: "#708090"
     }
 ];

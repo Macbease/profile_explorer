@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     buttonText: {
         fontWeight: "bold",
         color: "white",
-        fontSize: 16,
+        fontSize: 14,
         textAlign: "center"
     },
     card: {

@@ -14,7 +14,12 @@ const Carousel_W = 280;
 
 export default function SavedCards({ route, navigation }) {
     const [loading, setLoading] = React.useState(true);
-    const [result, setResult] = React.useState(null);
+    const [result, setResult] = React.useState([{
+        img: " ",
+        name: "",
+        tag: "",
+        color: ""
+    }]);
     const scrollY = React.useRef(new Animated.Value(0)).current;
 
     function fetchSearchResult() {
@@ -32,8 +37,8 @@ export default function SavedCards({ route, navigation }) {
         if (loading) {
             return (
                 <View style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: width * 0.3 }}>
-                    <LottieView source={require("../assets/141572-space-boy-developer.json")} autoPlay loop style={[{ width: 260, height: 260 }]} />
-                    <Text style={styles.searching}>Hold on while we are fetching your saved cards!</Text>
+                    {/* <LottieView source={require("../assets/141572-space-boy-developer.json")} autoPlay loop style={[{ width: 260, height: 260 }]} /> */}
+                    <Text style={styles.searching}>Hold on while we are fetching your saved cards...</Text>
                 </View>
             )
         }
@@ -60,7 +65,7 @@ export default function SavedCards({ route, navigation }) {
                             return <Card2 item={item} opacity={opacity} navigation={navigation} index={index} key={index} liked={true} />
                         })}
                     </Animated.ScrollView>
-                </SafeAreaView >
+                </SafeAreaView>
             )
         }
     }

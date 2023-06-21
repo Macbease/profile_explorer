@@ -27,12 +27,12 @@ export default function Prompts() {
             <FlatList
                 data={prompts}
                 keyExtractor={(index, _) => index}
-                contentContainerStyle={{ width: width - 2 * SPACING, marginLeft: SPACING, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 4 * SPACING }}
+                contentContainerStyle={{ width: width - 2 * SPACING, marginLeft: SPACING, display: "flex", alignItems: "center", justifyContent: "center", paddingBottom: 300 }}
                 numColumns={2}
                 renderItem={({ item, index }) => {
                     return (
                         <Animatable.View animation={animation} useNativeDriver delay={600}>
-                            <Pressable style={({ pressed }) => [styles.card, pressed && { opacity: 0.7 }]}>
+                            <Pressable style={[styles.card]}>
                                 <Text style={styles.cardText}>{item}</Text>
                             </Pressable>
                         </Animatable.View>
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        paddingHorizontal: 2 * SPACING
+        paddingHorizontal: SPACING
     },
     subText: {
         marginLeft: width / 1.8,
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         paddingHorizontal: 12,
         color: "#f3486aea",
-        fontSize: 26
+        fontSize: 22
     },
     title: {
         width: width - 2 * SPACING,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     },
     heading: {
         fontWeight: "bold",
-        fontSize: 18,
+        fontSize: 16,
         textAlign: "center",
         paddingHorizontal: 12
     }

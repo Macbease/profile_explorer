@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         fontWeight: "bold",
         color: "white",
-        fontSize: 16,
+        fontSize: 14,
         bottom: SPACING / 2,
         left: 85
     },
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     cardText: {
         fontWeight: "bold",
         color: "white",
-        fontSize: 16,
+        fontSize: 14,
         textAlign: "center",
     },
 });

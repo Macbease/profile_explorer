@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     buttonText: {
         fontWeight: "bold",
         color: "white",
-        fontSize: 16,
+        fontSize: 14,
         textAlign: "center"
     },
     prompt: {
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontWeight: "bold",
-        fontSize: 24,
+        fontSize: 22,
         marginLeft: SPACING,
         color: "#444"
     },
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     profileText: {
         fontWeight: "bold",
         marginTop: 1,
-        fontSize: 16,
+        fontSize: 14,
         color: "#505053"
     },
     invite: {
