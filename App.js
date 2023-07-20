@@ -12,6 +12,7 @@ import Explore from './screens/explore';
 import ChooseInterest from './screens/chooseInterest';
 import SavedCards from './screens/savedCards';
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
